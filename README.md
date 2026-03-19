@@ -92,3 +92,17 @@ We adopt the following open-sourced projects:
 - [diffusers](https://github.com/huggingface/diffusers/): basic codebase to train Stable Diffusion models.
 - [mmdetection](https://github.com/open-mmlab/mmdetection): dataloader to handle images with various geometric conditions.
 - [mmdetection3d](https://github.com/open-mmlab/mmdetection3d) & [LAMA](https://github.com/ZejianLi/LAMA): data pre-processing of the training datasets.
+
+## Citation 📚
+
+If you find this repository useful, please consider citing:
+
+```bibtex
+@inproceedings{cai2025cycle,
+  title={Cycle-consistent learning for joint layout-to-image generation and object detection},
+  author={Cai, Xinhao and Lai, Qiuxia and Pei, Gensheng and Shu, Xiangbo and Yao, Yazhou and Wang, Wenguan},
+  booktitle=ICCV,
+  pages={6797--6807},
+  year={2025}
+}
+```
