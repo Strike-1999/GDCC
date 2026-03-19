@@ -1,6 +1,6 @@
 # GDCC
 
-This anonymous repository contains the implementation of the paper:
+This repository contains the code of the paper:
 
 > Cycle-Consistent Learning for Joint Layout-to-Image Generation and Object Detection <br>
 
@@ -39,9 +39,9 @@ We provide original L2I generation model and the model fine-tuned with GDCC for 
 |        Dataset        |  L2I Model   | GDCC Fine-tune | Image Resolution | Grid Size |                           Download                          |
 | :-------------------: |:------------:|:--------------:| :--------------: | :-------: | :----------------------------------------------------------: |
 |      COCO-Stuff       | GeoDiffusion |       ×        |     256x256      |  256x256  | [HF Hub](https://huggingface.co/KaiChen1998/geodiffusion-coco-stuff-256x256) |
-|      COCO-Stuff       | GeoDiffusion |       √        |     256x256      |  256x256  | [HF Hub](https://huggingface.co/AnonymousGDCC/GeoDiffusion_256x256_GDCC/tree/main) |
+|      COCO-Stuff       | GeoDiffusion |       √        |     256x256      |  256x256  | [HF Hub](https://huggingface.co/Strike1999/GeoDiffusion_256x256_GDCC) |
 |      COCO-Stuff       | GeoDiffusion |       ×        |     512x512      |  256x256  | [HF Hub](https://huggingface.co/KaiChen1998/geodiffusion-coco-stuff-512x512) |
-|      COCO-Stuff       | GeoDiffusion |       √        |     512x512      |  256x256  | [HF Hub](https://huggingface.co/AnonymousGDCC/GeoDiffusion_512x512_GDCC/tree/main) |
+|      COCO-Stuff       | GeoDiffusion |       √        |     512x512      |  256x256  | [HF Hub](https://huggingface.co/Strike1999/GeoDiffusion_512x512_GDCC) |
 
 
 
@@ -67,77 +67,6 @@ bash tools/dist_test_512x512.sh
 **Note:** If you need to compute the **YOLO_Score**, please set `--nsamples` to `5`.
 ### 2. Evaluate L2I Generation Models based on the generated images
 For FID and YOLO Scores, Please refer to [LAMA](https://github.com/ZejianLi/LAMA/tree/main).
-
-## Download Pre-trained Detection Models
-We provide original L2I detection model and the model fine-tuned with GDCC for comparison. Download and put them into `./pretrained_detectors/`.
-|        Detection Model        |  Backbone   |  Configuration   | Original CKPT | GDCC Fine-tuned CKPT|
-| :-------------------: |:------------:|:------------:|:--------------:| :--------------: |
-|      Faster-R-CNN     |R50           | [config](https://github.com/open-mmlab/mmdetection/blob/main/configs/faster_rcnn/faster-rcnn_r50_fpn_1x_coco.py) |       [ckpt](https://download.openxlab.org.cn/models/mmdetection/FasterR-CNN/weight/faster-rcnn_r50_fpn_1x_coco)        |     [ckpt](https://huggingface.co/AnonymousGDCC/Faster-R-CNN_r50_GDCC/tree/main)      |
-|      Cascade-R-CNN    |R50           | [config](https://github.com/open-mmlab/mmdetection/blob/main/configs/cascade_rcnn/cascade-rcnn_r50_fpn_1x_coco.py) |       [ckpt](https://download.openmmlab.com/mmdetection/v2.0/cascade_rcnn/cascade_rcnn_r50_fpn_1x_coco/cascade_rcnn_r50_fpn_1x_coco_20200316-3dc56deb.pth)        |     [ckpt](https://huggingface.co/AnonymousGDCC/Cascade-R-CNN_r50_GDCC/tree/main)      |
-|      DINO             |R50           | [config](https://github.com/open-mmlab/mmdetection/blob/main/configs/dino/dino-4scale_r50_8xb2-12e_coco.py) |       [ckpt](https://download.openmmlab.com/mmdetection/v3.0/dino/dino-4scale_r50_8xb2-12e_coco/dino-4scale_r50_8xb2-12e_coco_20221202_182705-55b2bba2.pth)        |     [ckpt](https://huggingface.co/AnonymousGDCC/DINO_r50_GDCC/tree/main)      | 
-|      CO-DETR          |R50           | [config](https://github.com/open-mmlab/mmdetection/blob/main/projects/CO-DETR/configs/codino/co_dino_5scale_r50_lsj_8xb2_1x_coco.py) |       [ckpt](https://download.openmmlab.com/mmdetection/v3.0/codetr/co_dino_5scale_r50_lsj_8xb2_1x_coco/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth)       |     [ckpt](https://huggingface.co/AnonymousGDCC/CO-DETR_r50_GDCC/tree/main)      |
-
-### Evaluate Detection Models
-To evaluate detection models, please refer to [MMdetection Instructions](https://github.com/open-mmlab/mmdetection/blob/main/docs/en/user_guides/test.md).
-
-## Train GDCC
-
-### 1. Prepare dataset
-
-We primarily use the [nuImages](https://www.nuscenes.org/nuimages) and [COCO-Stuff](https://cocodataset.org/#home) datasets for training GeoDiffusion. Download the image files from the official websites. For better training performance, we follow [mmdetection3d](https://github.com/open-mmlab/mmdetection3d/blob/main/configs/nuimages/README.md/#introduction) to convert the nuImages dataset into COCO format, while the converted annotation file for COCO-Stuff can be download via [HuggingFace](https://huggingface.co/datasets/KaiChen1998/coco-stuff-geodiffusion). The data structure should be as follows after all files are downloaded.
-
-```
-├── data
-│   ├── coco
-│   │   │── coco_stuff_annotations
-│   │   │   │── train
-│   │   │   │   │── instances_stuff_train2017.json
-│   │   │   │── val
-│   │   │   │   │── instances_stuff_val2017.json
-│   │   │── train2017
-│   │   │── val2017
-│   ├── nuimages
-│   │   │── annotation
-│   │   │   │── train
-│   │   │   │   │── nuimages_v1.0-train.json
-│   │   │   │── val
-│   │   │   │   │── nuimages_v1.0-val.json
-│   │   │── samples
-```
-
-### 2. Launch distributed training
-
-
-```bash
-# fine-tune L2I generation model
-bash tools/dist_train_finetune_generator_coco.sh \
-	--dataset_config_name configs/data/coco_stuff_256x256.py \
-	--output_dir work_dirs/gdcc_g_geodiffusion_coco_stuff_256x256
-	
-# fine-tune L2I generation model and detection model
-bash tools/dist_train_finetune_generator_detector_coco_alternative.sh \
-	--dataset_config_name configs/data/coco_stuff_256x256.py \
-	--output_dir work_dirs/gdcc_gd_geodiffusion_coco_stuff_256x256
-
-
-# fine-tune L2I generation model and detection model simultaneously
-bash tools/dist_train_finetune_generator_detector_coco_simultaneous.sh \
-	--dataset_config_name configs/data/coco_stuff_256x256.py \
-	--output_dir work_dirs/gdcc_gd_simultaneous_geodiffusion_coco_stuff_256x256
-```
-
-
-
-### 3. Launch batch inference
-
-
-```bash
-# COCO-Stuff
-# We encourage readers to check https://github.com/ZejianLi/LAMA?tab=readme-ov-file#testing
-# to report quantitative results on COCO-Stuff L2I benchmark.
-bash tools/dist_test.sh PATH_TO_CKPT \
-	--dataset_config_name configs/data/coco_stuff_256x256.py
-```
 
 
 ## Qualitative Results
