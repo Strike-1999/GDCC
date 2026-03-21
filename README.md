@@ -1,4 +1,4 @@
-# GDCC
+# GDCC (ICCV 2025)
 
 This repository contains the code of the paper:
 
